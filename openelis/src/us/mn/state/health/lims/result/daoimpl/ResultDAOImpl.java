@@ -20,6 +20,7 @@ package us.mn.state.health.lims.result.daoimpl;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.owasp.encoder.Encode;
 import us.mn.state.health.lims.analysis.valueholder.Analysis;
 import us.mn.state.health.lims.analyte.valueholder.Analyte;
 import us.mn.state.health.lims.audittrail.dao.AuditTrailDAO;
@@ -106,7 +107,9 @@ public class ResultDAOImpl extends BaseDAOImpl implements ResultDAO {
         }
 
         try {
-
+            String value = result.getValue();
+            if (value != null)
+                result.setValue(Encode.forHtml(value));
             String id = (String) HibernateUtil.getSession().save(result);
             result.setId(id);
 
@@ -158,6 +161,9 @@ public class ResultDAOImpl extends BaseDAOImpl implements ResultDAO {
         }
 
         try {
+            String value = result.getValue();
+            if (value != null)
+                result.setValue(Encode.forHtml(value));
             HibernateUtil.getSession().merge(result);
             HibernateUtil.getSession().flush();
             HibernateUtil.getSession().clear();

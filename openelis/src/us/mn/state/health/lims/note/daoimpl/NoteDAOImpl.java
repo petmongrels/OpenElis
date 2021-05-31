@@ -20,6 +20,7 @@ package us.mn.state.health.lims.note.daoimpl;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.owasp.encoder.Encode;
 import us.mn.state.health.lims.audittrail.dao.AuditTrailDAO;
 import us.mn.state.health.lims.audittrail.daoimpl.AuditTrailDAOImpl;
 import us.mn.state.health.lims.common.action.IActionConstants;
@@ -77,6 +78,9 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 
 	public boolean insertData(Note note) throws LIMSRuntimeException {
 		try {
+            String text = note.getText();
+            if (text != null)
+                note.setText(Encode.forHtml(text));
 			String id = (String) HibernateUtil.getSession().save(note);
 			note.setId(id);
 
@@ -84,7 +88,7 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 			String sysUserId = note.getSysUserId();
 			String tableName = "NOTE";
 			auditDAO.saveNewHistory(note,sysUserId,tableName);
-	
+
 			HibernateUtil.getSession().flush();
 			HibernateUtil.getSession().clear();
 
@@ -115,6 +119,9 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 		}
 
 		try {
+            String text = note.getText();
+            if (text != null)
+                note.setText(Encode.forHtml(text));
 			HibernateUtil.getSession().merge(note);
 			HibernateUtil.getSession().flush();
 			HibernateUtil.getSession().clear();
@@ -336,7 +343,7 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 			query.setInteger("refId", Integer.parseInt(refId));
 			query.setInteger("tableId", Integer.parseInt(table_id));
 			query.setString("subject", subject);
-			
+
 			List<Note> noteList = query.list();
 			closeSession();
 			return noteList;
