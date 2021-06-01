@@ -19,12 +19,7 @@ public class SafeRequest extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String name) {
         HttpServletRequest request = (HttpServletRequest) this.getRequest();
-        return getEncodedValue(request.getParameter(name));
-    }
-
-    private String getEncodedValue(String value) {
-        if (value == null) return null;
-        return Encode.forHtml(value);
+        return StringUtil.encode(request.getParameter(name));
     }
 
     @Override
@@ -44,7 +39,7 @@ public class SafeRequest extends HttpServletRequestWrapper {
         String[] existingValues = super.getParameterValues(name);
         String[] newValues = new String[existingValues.length];
         for (int i = 0; i < existingValues.length; i++) {
-            newValues[i] = getEncodedValue(existingValues[i]);
+            newValues[i] = StringUtil.encode(existingValues[i]);
         }
         return newValues;
     }

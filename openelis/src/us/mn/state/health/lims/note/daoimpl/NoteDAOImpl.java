@@ -27,6 +27,7 @@ import us.mn.state.health.lims.common.action.IActionConstants;
 import us.mn.state.health.lims.common.daoimpl.BaseDAOImpl;
 import us.mn.state.health.lims.common.exception.LIMSRuntimeException;
 import us.mn.state.health.lims.common.log.LogEvent;
+import us.mn.state.health.lims.common.util.StringUtil;
 import us.mn.state.health.lims.common.util.SystemConfiguration;
 import us.mn.state.health.lims.hibernate.HibernateUtil;
 import us.mn.state.health.lims.note.dao.NoteDAO;
@@ -78,6 +79,7 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 
 	public boolean insertData(Note note) throws LIMSRuntimeException {
 		try {
+            note.setText(StringUtil.encode(note.getText()));
             String text = note.getText();
             if (text != null)
                 note.setText(Encode.forHtml(text));
@@ -119,6 +121,7 @@ public class NoteDAOImpl extends BaseDAOImpl implements NoteDAO {
 		}
 
 		try {
+            note.setText(StringUtil.encode(note.getText()));
             String text = note.getText();
             if (text != null)
                 note.setText(Encode.forHtml(text));

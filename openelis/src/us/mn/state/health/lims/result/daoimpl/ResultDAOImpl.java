@@ -30,6 +30,7 @@ import us.mn.state.health.lims.common.daoimpl.BaseDAOImpl;
 import us.mn.state.health.lims.common.exception.LIMSDuplicateRecordException;
 import us.mn.state.health.lims.common.exception.LIMSRuntimeException;
 import us.mn.state.health.lims.common.log.LogEvent;
+import us.mn.state.health.lims.common.util.StringUtil;
 import us.mn.state.health.lims.common.util.SystemConfiguration;
 import us.mn.state.health.lims.hibernate.HibernateUtil;
 import us.mn.state.health.lims.result.dao.ResultDAO;
@@ -107,9 +108,7 @@ public class ResultDAOImpl extends BaseDAOImpl implements ResultDAO {
         }
 
         try {
-            String value = result.getValue();
-            if (value != null)
-                result.setValue(Encode.forHtml(value));
+            result.setValue(StringUtil.encode(result.getValue()));
             String id = (String) HibernateUtil.getSession().save(result);
             result.setId(id);
 
@@ -161,9 +160,7 @@ public class ResultDAOImpl extends BaseDAOImpl implements ResultDAO {
         }
 
         try {
-            String value = result.getValue();
-            if (value != null)
-                result.setValue(Encode.forHtml(value));
+            result.setValue(StringUtil.encode(result.getValue()));
             HibernateUtil.getSession().merge(result);
             HibernateUtil.getSession().flush();
             HibernateUtil.getSession().clear();
